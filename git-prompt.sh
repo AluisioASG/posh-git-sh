@@ -25,6 +25,7 @@
 # bash.enableGitStatus
 # bash.showStatusWhenZero
 # bash.showUpstream
+# bash.wrapStatus
 # ```
 #
 # bash.describeStyle
@@ -90,6 +91,16 @@
 #          `git-rev-list`
 # git    | _Default_. Always compares `HEAD` to `@{upstream}`
 # svn    | Always compares `HEAD` to `SVN` upstream
+#
+# bash.wrapStatus
+# ---------------
+#
+# By default, `__posh_git_ps1` will wrap its output with square brackets.
+#
+# Option | Description
+# ------ | -----------
+# true   | _Default_. Put the repository's status between `[]`
+# false  | Don't display anything before or after the status string
 ###############################################################################
 
 # Convenience function to set PS1 to show git status. Must supply two
@@ -134,14 +145,21 @@ __posh_git_echo () {
     local DefaultForegroundColor=$(__posh_color '\e[22;39m') # Default no color
     local DefaultBackgroundColor=
 
-    local BeforeText=' ['
+    local BeforeText AfterText
+    if [ "$(git config --bool bash.wrapStatus)" = 'false' ]; then
+        BeforeText=''
+        AfterText=''
+    else
+        BeforeText=' ['
+        AfterText=']'
+    fi
+
     local BeforeForegroundColor=$(__posh_color '\e[1;33m') # Yellow
     local BeforeBackgroundColor=
     local DelimText=' |'
     local DelimForegroundColor=$(__posh_color '\e[1;33m') # Yellow
     local DelimBackgroundColor=
 
-    local AfterText=']'
     local AfterForegroundColor=$(__posh_color '\e[1;33m') # Yellow
     local AfterBackgroundColor=
 
