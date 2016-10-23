@@ -131,7 +131,7 @@ __posh_git_echo () {
         return;
     fi
 
-    local DefaultForegroundColor=$(__posh_color '\e[m') # Default no color
+    local DefaultForegroundColor=$(__posh_color '\e[22;39m') # Default no color
     local DefaultBackgroundColor=
 
     local BeforeText=' ['
@@ -154,7 +154,7 @@ __posh_git_echo () {
     local BranchBackgroundColor=
     local BranchAheadForegroundColor=$(__posh_color '\e[1;32m') # Green
     local BranchAheadBackgroundColor=
-    local BranchBehindForegroundColor=$(__posh_color '\e[0;31m') # Red
+    local BranchBehindForegroundColor=$(__posh_color '\e[22;31m') # Red
     local BranchBehindBackgroundColor=
     local BranchBehindAndAheadForegroundColor=$(__posh_color '\e[1;33m') # Yellow
     local BranchBehindAndAheadBackgroundColor=
@@ -166,14 +166,14 @@ __posh_git_echo () {
     local IndexForegroundColor=$(__posh_color '\e[1;32m') # Dark green
     local IndexBackgroundColor=
 
-    local WorkingForegroundColor=$(__posh_color '\e[0;31m') # Dark red
+    local WorkingForegroundColor=$(__posh_color '\e[22;31m') # Dark red
     local WorkingBackgroundColor=
 
-    local StashForegroundColor=$(__posh_color '\e[0;34m') # Darker blue
+    local StashForegroundColor=$(__posh_color '\e[22;34m') # Darker blue
     local StashBackgroundColor=
     local StashText='$'
 
-    local RebaseForegroundColor=$(__posh_color '\e[0m') # reset
+    local RebaseForegroundColor=$(__posh_color '\e[22;39m') # reset
     local RebaseBackgroundColor=
 
     local EnableFileStatus=`git config --bool bash.enableFileStatus`
