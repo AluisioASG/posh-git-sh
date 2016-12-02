@@ -429,7 +429,7 @@ __posh_gitdir ()
 __posh_git_ps1_upstream_divergence ()
 {
     local key value
-    local svn_remote svn_url_pattern
+    local svn_remote svn_remote_num svn_url_pattern
     local upstream=git          # default
     local legacy=''
 
@@ -445,7 +445,8 @@ __posh_git_ps1_upstream_divergence ()
             fi
             ;;
         svn-remote.*.url)
-            svn_remote[ $((${#svn_remote[@]} + 1)) ]="$value"
+            svn_remote_num=$((${#svn_remote[@]} + 1))
+            svn_remote[$svn_remote_num]="$value"
             svn_url_pattern+="\\|$value"
             upstream=svn+git # default upstream is SVN if available, else git
             ;;
