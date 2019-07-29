@@ -1,6 +1,8 @@
 posh-git-bash
 =============
 
+[![Build Status](https://travis-ci.org/lyze/posh-git-sh.svg?branch=master)](https://travis-ci.org/lyze/posh-git-sh)
+
 This script allows you to see the status of the current git repository in your
 prompt. It replicates the prompt status from the Windows PowerShell module
 [dahlbyk/posh-git](https://github.com/dahlbyk/posh-git).
@@ -20,23 +22,34 @@ Installation Instructions
 
 4.  If you are using `bash`, you should call `__posh_git_ps1` in your
     `PROMPT_COMMAND` variable. The function `__posh_git_ps1` takes two
-    parameters as in `__posh_git_ps1 <string_to_prepend> <string_to_append>`.
-    This function updates `PS1` accordingly. For example, the following
+    parameters (`__posh_git_ps1 <prefix> <suffix>`), and sets `PS1` to
+    `<prefix><status><suffix>`. You can also use `__posh_git_echo` to echo only
+    the status.
 
-    ```sh
+    *   Bash example:
+
+    ```bash
     PROMPT_COMMAND='__posh_git_ps1 "\u@\h:\w " "\\\$ ";'$PROMPT_COMMAND
     ```
 
-    will show username, at-sign, host, colon, cwd, then various status strings,
+    This shows username, at-sign, host, colon, cwd, then various status strings,
     followed by dollar and space, as your prompt. This invocation prepends this
     instruction to the existing value of `PROMPT_COMMAND`.
 
-    If you are using `zsh`, you need to set the
+    *   For zsh, you need to set the
     [`PROMPT`](http://zsh.sourceforge.net/Doc/Release/Parameters.html#index-PROMPT)
     variable or the
     [`precmd`](http://zsh.sourceforge.net/Doc/Release/Functions.html#index-precmd)
-    hook. See also `__posh_git_echo` or
-    [issue #14 for `oh-my-zsh`](https://github.com/lyze/posh-git-sh/issues/14).
+    hook.
+
+    ```zsh
+    precmd() {
+      __posh_git_ps1 '\u@\h:\w ' '$ '
+    }
+    ```
+
+    For some additional hints for integrating with `oh-my-zsh`, take a look at
+    [issue #14](https://github.com/lyze/posh-git-sh/issues/14).
 
 
 The Prompt
@@ -133,6 +146,18 @@ You can also manually edit your git configuration files. These files are most
 likely `~/.gitconfig` or `.git/config`. An example illustrating the syntax of
 these files can be found at http://git-scm.com/docs/git-config#_example.
 
+### bash.branchBehindAndAheadDisplay
+
+This option controls whether and how to display the number of commits by which
+the current branch is behind or ahead of its remote.
+
+*   `full`: _Default_. Display count alongside the appropriate up/down arrow. If
+    both behind and ahead, use two separate arrows.
+*   `compact`: Display count alongside the appropriate up/down arrow. If both
+    behind and ahead, display the behind count, then a double arrow, then the
+    ahead count.
+*   `minimal`: Display the up/down or double arrow as appropriate, with no
+    counts.
 
 ### bash.describeStyle
 
@@ -140,40 +165,35 @@ This option controls if you would like to see more information about the
 identity of commits checked out as a detached `HEAD`. This is also controlled
 by the legacy environment variable `GIT_PS1_DESCRIBESTYLE`.
 
-Option   | Description
--------- | -----------
-contains | relative to newer annotated tag `(v1.6.3.2~35)`
-branch   | relative to newer tag or branch `(master~4)`
-describe | relative to older annotated tag `(v1.6.3.1-13-gdd42c2f)`
-default  | exactly matching tag
+
+*  `contains`: relative to newer annotated tag `(v1.6.3.2~35)`
+*  `branch`: relative to newer tag or branch `(master~4)`
+*  `describe`: relative to older annotated tag `(v1.6.3.1-13-gdd42c2f)`
+*  `default`: exactly matching tag
 
 ### bash.enableFileStatus
 
-Option | Description
------- | -----------
-true   | _Default_. The script will query for all file indicators every time.
-false  | No file indicators will be displayed. The script will not query upstream for differences. Branch color-coding information is still displayed.
+*  `true`: _Default_. The script will query for all file indicators every time.
+*  `false`: No file indicators will be displayed. The script will not query
+    upstream for differences. Branch color-coding information is still
+    displayed.
 
 ### bash.enableGitStatus
 
-Option | Description
------- | -----------
-true   | _Default_. Color coding and indicators will be shown.
-false  | The script will not run.
+*  `true`: _Default_. Color coding and indicators will be shown.
+*  `false`: The script will not run.
 
-### bash.showStashState
+### bash.enableStashStatus
 
-Option | Description
------- | -----------
-true   | _Default_. An indicator will display if the stash is not empty.
-false  | An indicator will not display the stash status.
+*  `true`: _Default_. An indicator will display if the stash is not empty.
+*  `false`: An indicator will not display the stash status.
 
 ### bash.showStatusWhenZero
 
-Option | Description
------- | -----------
-true   | Indicators will be shown even if there are no updates to the index or working tree.
-false  | _Default_. No file change indicators will be shown if there are no changes to the index or working tree.
+*  `true`:   Indicators will be shown even if there are no updates to the index or
+    working tree.
+*  `false`: _Default_. No file change indicators will be shown if there are no
+   changes to the index or working tree.
 
 ### bash.showUpstream
 
@@ -181,18 +201,15 @@ By default, `__posh_git_ps1` will compare `HEAD` to your `SVN` upstream if it ca
 find one, or `@{upstream}` otherwise. This is also controlled by the legacy
 environment variable `GIT_PS1_SHOWUPSTREAM`.
 
-Option | Description
------- | -----------
-legacy | Does not use the `--count` option available in recent versions of `git-rev-list`
-git    | _Default_. Always compares `HEAD` to `@{upstream}`
-svn    | Always compares `HEAD` to `SVN` upstream
+*  `legacy`: Does not use the `--count` option available in recent versions of
+   `git-rev-list`
+*  `git`: _Default_. Always compares `HEAD` to `@{upstream}`
+*  `svn`: Always compares `HEAD` to `SVN` upstream
 
 ### bash.enableStatusSymbol
 
-Option | Description
------- | -----------
-true   | _Default_. Status symbols (`≡` `↑` `↓` `↕`) will be shown.
-false  | No status symbol will be shown, saving some prompt length.
+*  `true`: _Default_. Status symbols (`≡` `↑` `↓` `↕`) will be shown.
+*  `false`: No status symbol will be shown, saving some prompt length.
 
 
 Known issues
